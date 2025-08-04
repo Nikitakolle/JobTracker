@@ -19,21 +19,26 @@ namespace JobTracker.Controllers
         }
 
         // ✅ GET: Jobs (with search support)
-        public async Task<IActionResult> Index(string searchString)
-        {
-            var jobs = from j in _context.Jobs
-                       select j;
+       public async Task<IActionResult> Index(string searchString)
+{
+    if (_context.Jobs == null)
+    {
+        return View(new List<Job>());
+    }
 
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                jobs = jobs.Where(j =>
-                    j.CompanyName.Contains(searchString) ||
-                    j.Position.Contains(searchString) ||
-                    j.Status.Contains(searchString));
-            }
+    var jobs = from j in _context.Jobs
+               select j;
 
-            return View(await jobs.ToListAsync());
-        }
+    if (!string.IsNullOrEmpty(searchString))
+    {
+        jobs = jobs.Where(j =>
+            j.CompanyName.Contains(searchString) ||
+            j.Position.Contains(searchString) ||
+            j.Status.Contains(searchString));
+    }
+
+    return View(await jobs.ToListAsync());
+}
 
         // GET: Jobs/Details/5
         public async Task<IActionResult> Details(int? id)
