@@ -1,4 +1,4 @@
-﻿using JobTracker.Models;
+using JobTracker.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,8 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // SQL Server connection
+// PostgreSQL connection (Railway DB)
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
+
+
+// Tell Kestrel to listen on all network interfaces on port 80
+builder.WebHost.UseUrls("http://0.0.0.0:80");
 
 // Tell Kestrel to listen on all network interfaces on port 80
 builder.WebHost.UseUrls("http://0.0.0.0:80");
