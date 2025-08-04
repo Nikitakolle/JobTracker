@@ -7,8 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // SQL Server connection
+var connectionString = Environment.GetEnvironmentVariable("postgresql://postgres:HNbddSxZqLnJgVDXDphjkabMyNphScuF@postgres.railway.internal:5432/railway")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
+
 
 // Tell Kestrel to listen on all network interfaces on port 80
 builder.WebHost.UseUrls("http://0.0.0.0:80");
