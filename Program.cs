@@ -10,6 +10,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Tell Kestrel to listen on all network interfaces on port 80
+builder.WebHost.UseUrls("http://0.0.0.0:80");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -27,13 +30,11 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Jobs}/{action=Index}/{id?}");
 
-
 // ✅ Seed sample data BEFORE app.Run()
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-    
+    // You can add seeding logic here if needed
 }
 
 app.Run(); // 👈 KEEP THIS AT THE END
