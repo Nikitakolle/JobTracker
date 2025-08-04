@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // SQL Server connection
-var connectionString = Environment.GetEnvironmentVariable("postgresql://postgres:HNbddSxZqLnJgVDXDphjkabMyNphScuF@postgres.railway.internal:5432/railway")
+// PostgreSQL connection (Railway DB)
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
     ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
